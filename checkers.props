@@ -1,0 +1,8 @@
+numofplayers = 6
+color1 = blue
+color2 = red
+color3 = green
+color4 = cyan
+color5 = magenta
+color6 = yellow
+serverport = 12345
