@@ -3,7 +3,9 @@ package checkers.client.main;
 import javafx.scene.paint.Color;
 import lombok.Data;
 
-import static checkers.client.main.GameConstants.COLORS;
+import java.util.Objects;
+
+import static checkers.GameConstants.COLORS;
 
 @Data
 public class Piece {
@@ -19,4 +21,16 @@ public class Piece {
         selected = false;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Piece piece = (Piece) o;
+        return row == piece.row && column == piece.column && Objects.equals(color, piece.color);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column, color);
+    }
 }
