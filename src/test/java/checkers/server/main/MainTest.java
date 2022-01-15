@@ -234,69 +234,69 @@ class MainTest {
         }
     }
 
-        @Test
-        void testFillFieldForPlayer5() {
-            int[][] field = new int[H][W];
-            main.fillFieldForPlayer5(field);
-            for (int i = 0; i < H; i++) {
-                for (int j = 0; j < W; j++) {
-                    assertTrue(field[i][j] == 0 || field[i][j] == 5);
-                }
-                assertEquals(5, field[7][3]);
-                assertEquals(5, field[6][2]);
-                assertEquals(5, field[6][4]);
-                assertEquals(5, field[5][1]);
-                assertEquals(5, field[5][3]);
-                assertEquals(5, field[5][5]);
-                assertEquals(5, field[4][0]);
-                assertEquals(5, field[4][2]);
-                assertEquals(5, field[4][4]);
-                assertEquals(5, field[4][6]);
+    @Test
+    void testFillFieldForPlayer5() {
+        int[][] field = new int[H][W];
+        main.fillFieldForPlayer5(field);
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < W; j++) {
+                assertTrue(field[i][j] == 0 || field[i][j] == 5);
             }
+            assertEquals(5, field[7][3]);
+            assertEquals(5, field[6][2]);
+            assertEquals(5, field[6][4]);
+            assertEquals(5, field[5][1]);
+            assertEquals(5, field[5][3]);
+            assertEquals(5, field[5][5]);
+            assertEquals(5, field[4][0]);
+            assertEquals(5, field[4][2]);
+            assertEquals(5, field[4][4]);
+            assertEquals(5, field[4][6]);
         }
-
-            @Test
-            void testFillFieldForPlayer6 () {
-                int[][] field = new int[H][W];
-                main.fillFieldForPlayer6(field);
-                for (int i = 0; i < H; i++) {
-                    for (int j = 0; j < W; j++) {
-                        assertTrue(field[i][j] == 0 || field[i][j] == 6);
-                    }
-                    assertEquals(6,field[7][21]);
-                    assertEquals(6,field[6][20]);
-                    assertEquals(6,field[6][20]);
-                    assertEquals(6,field[5][19]);
-                    assertEquals(6,field[5][21]);
-                    assertEquals(6,field[5][23]);
-                    assertEquals(6,field[4][18]);
-                    assertEquals(6,field[4][20]);
-                    assertEquals(6,field[4][22]);
-                    assertEquals(6,field[4][24]);
-                }
     }
 
-                @Test
-                void testFillEmptyPart () {
-                    int[][] field = new int[H][W];
-                    //main.fillFieldForPlayer2(field);
-                    for (int i = 0; i < H; i++) {
-                        for (int j = 0; j < W; j++) {
-                            field[i][j] = 9;
-                        }
-                    }
-                    main.fillEmptyPart(field);
-                    assertEquals(0, field[16][12]);
-                    assertEquals(0, field[15][11]);
-                    assertEquals(0, field[15][13]);
-                    assertEquals(0, field[14][10]);
-                    assertEquals(0, field[14][12]);
-                    assertEquals(0, field[14][14]);
-                    assertEquals(0, field[13][9]);
-                    assertEquals(0, field[13][11]);
-                    assertEquals(0, field[13][13]);
-                    assertEquals(0, field[13][15]);
-                }
+    @Test
+    void testFillFieldForPlayer6 () {
+        int[][] field = new int[H][W];
+        main.fillFieldForPlayer6(field);
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < W; j++) {
+                assertTrue(field[i][j] == 0 || field[i][j] == 6);
             }
+            assertEquals(6,field[7][21]);
+            assertEquals(6,field[6][20]);
+            assertEquals(6,field[6][20]);
+            assertEquals(6,field[5][19]);
+            assertEquals(6,field[5][21]);
+            assertEquals(6,field[5][23]);
+            assertEquals(6,field[4][18]);
+            assertEquals(6,field[4][20]);
+            assertEquals(6,field[4][22]);
+            assertEquals(6,field[4][24]);
+        }
+    }
+
+    @Test
+    void testFillEmptyPart () {
+        int[][] field = new int[H][W];
+        //main.fillFieldForPlayer2(field);
+        for (int i = 0; i < H; i++) {
+            for (int j = 0; j < W; j++) {
+                field[i][j] = 9;
+            }
+        }
+        main.fillEmptyPart(field);
+        assertEquals(0, field[16][12]);
+        assertEquals(0, field[15][11]);
+        assertEquals(0, field[15][13]);
+        assertEquals(0, field[14][10]);
+        assertEquals(0, field[14][12]);
+        assertEquals(0, field[14][14]);
+        assertEquals(0, field[13][9]);
+        assertEquals(0, field[13][11]);
+        assertEquals(0, field[13][13]);
+        assertEquals(0, field[13][15]);
+    }
+}
 
 
