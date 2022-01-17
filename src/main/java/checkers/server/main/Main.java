@@ -26,6 +26,9 @@ public class Main {
 
     private ServerSocket serverSocket;
 
+    final static int H = 17;
+    final static int W = 25;
+
     private int connectedPlayers = 0;
     private List<Player> players = new ArrayList<>();
 
@@ -54,7 +57,7 @@ public class Main {
      * Waiting for clients
      * After connect of all clients - starting game process
      */
-    void initialize() {
+    private void initialize() {
         Properties props = new Properties();
         try (BufferedReader reader = Files.newBufferedReader(Paths.get("checkers.props"))) {
             props.load(reader);
@@ -75,8 +78,9 @@ public class Main {
             }
             int port = Integer.parseInt(props.getProperty("serverport"));
             serverSocket = new ServerSocket(port);
-            setField(fillField(numOfPlayers));
+            fillField(numOfPlayers);
             System.out.println("Started. Waiting for players...");
+
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
             System.exit(1);
@@ -91,20 +95,17 @@ public class Main {
     private void processGame() {
         while (connectedPlayers<numOfPlayers) {
             waitForPlayer();
-            //connectedPlayers++;
+
         }
-
-        // running thread for connections, that can't be a player
         new DummyThread(serverSocket).start();
-
         System.out.println("Starting!");
         for (Player player : players) {
             new Thread(player).start();
         }
-
         Random random = new Random();
         playerToMove = random.nextInt(players.size());
 
+        //playerToMove = 0;
         boolean gameInProgress = true;
         while (gameInProgress) {
             broadcastMove();
@@ -151,7 +152,7 @@ public class Main {
      * perfoms player's move in field
      * @param str - encoded string about player's move
      */
-    public int[][] makeMove(String str) {
+    int[][] makeMove(String str) {
         int posBegin = str.indexOf('(') + 1;
         String line = str.substring(posBegin, str.length()-1);
         System.out.println(line);
@@ -196,6 +197,7 @@ public class Main {
     }
 
     boolean firstWinGame(int[][] field) {
+//        return field[5][9] == 1;
         return field[16][12] == 1 &&
                 field[15][11] == 1 && field[15][13] == 1 &&
                 field[14][10] == 1 && field[14][12] == 1 && field[14][14] == 1 &&
@@ -230,6 +232,7 @@ public class Main {
                 field[12][18] == 5 && field[12][20] == 5 && field[12][22] == 5 && field[12][24] == 5;
     }
 
+
     boolean sixthWinGame(int[][] field) {
         return field[9][3] == 6 &&
                 field[10][2] == 6 && field[10][4] == 6 &&
@@ -262,8 +265,9 @@ public class Main {
         }
     }
 
+
     int[][] fillField(int numOfPlayers) {
-        int[][] field = new int[H][W];
+        field = new int[H][W];
         for (int i = 0; i < H; i++) {
             for (int j = 0; j < W; j++) {
                 field[i][j] = 9; // wrong
@@ -274,23 +278,23 @@ public class Main {
                 if ((i+j)%2==0) field[i][j] = 0;
             }
         }
-        field[6][0] = field[6][24] =
-                field[7][1] = field[7][23] =
-                field[8][0] = field[8][2] =
-                field[8][22] = field[8][24] =
-                field[9][1] = field[9][23] =
-                field[10][0] = field[10][24] = 9;
+        field[6][0] = field[6][24]
+                = field[7][1] = field[7][23]
+                = field[8][0] = field[8][2]
+                = field[8][22] = field[8][24]
+                = field[9][1] = field[9][23]
+                = field[10][0] = field[10][24] = 9;
 
         switch (numOfPlayers) {
-            case 2: fillForTwo(field); break;
-            case 3: fillForThree(field); break;
-            case 4: fillForFour(field); break;
-            case 6: fillForSix(field); break;
+            case 2: fillForTwo(); break;
+            case 3: fillForThree(); break;
+            case 4: fillForFour(); break;
+            case 6: fillForSix(); break;
         }
         return field;
     }
 
-    private void fillForSix(int[][] field) {
+    private void fillForSix() {
         fillFieldForPlayer1(field);
         fillFieldForPlayer2(field);
 
@@ -301,7 +305,7 @@ public class Main {
         fillFieldForPlayer6(field);
     }
 
-    private void fillForFour(int[][] field) {
+    private void fillForFour() {
         fillFieldForPlayer1(field);
         fillFieldForPlayer2(field);
 
@@ -309,7 +313,7 @@ public class Main {
         fillFieldForPlayer5(field);
     }
 
-    private void fillForThree(int[][] field) {
+    private void fillForThree() {
         fillFieldForPlayer1(field);
 
         fillFieldForPlayer3(field);
@@ -318,54 +322,54 @@ public class Main {
         fillEmptyPart(field);
     }
 
-    private void fillForTwo(int[][] field) {
+    private void fillForTwo() {
         fillFieldForPlayer1(field);
         fillFieldForPlayer2(field);
     }
 
-    public void fillFieldForPlayer1(int[][] field) {
+    void fillFieldForPlayer1(int[][] field) {
         field[0][12] = 1;
         field[1][11] = field[1][13] = 1;
         field[2][10] = field[2][12] = field[2][14] = 1;
         field[3][9] = field[3][11] = field[3][13] = field[3][15] = 1;
     }
 
-    public void fillFieldForPlayer2(int[][] field) {
+    void fillFieldForPlayer2(int[][] field) {
         field[16][12] = 2;
         field[15][11] = field[15][13] = 2;
         field[14][10] = field[14][12] = field[14][14] = 2;
         field[13][9] = field[13][11] = field[13][13] = field[13][15] = 2;
     }
 
-    public void fillFieldForPlayer3(int[][] field) {
+    void fillFieldForPlayer3(int[][] field) {
         field[9][3] = 3;
         field[10][2] = field[10][4] = 3;
         field[11][1] = field[11][3] = field[11][5] = 3;
         field[12][0] = field[12][2] = field[12][4] = field[12][6] = 3;
     }
 
-    public void fillFieldForPlayer4(int[][] field) {
+    void fillFieldForPlayer4(int[][] field) {
         field[9][21] = 4;
         field[10][20] = field[10][22] = 4;
         field[11][19] = field[11][21] = field[11][23] = 4;
         field[12][18] = field[12][20] = field[12][22] = field[12][24] = 4;
     }
 
-    public void fillFieldForPlayer5(int[][] field) {
+    void fillFieldForPlayer5(int[][] field) {
         field[7][3] = 5;
         field[6][2] = field[6][4] = 5;
         field[5][1] = field[5][3] = field[5][5] = 5;
         field[4][0] = field[4][2] = field[4][4] = field[4][6] = 5;
     }
 
-    public void fillFieldForPlayer6(int[][] field) {
+    void fillFieldForPlayer6(int[][] field) {
         field[7][21] = 6;
         field[6][20] = field[6][22] = 6;
         field[5][19] = field[5][21] = field[5][23] = 6;
         field[4][18] = field[4][20] = field[4][22] = field[4][24] = 6;
     }
 
-    public void fillEmptyPart(int[][] field) {
+    void fillEmptyPart(int[][] field) {
         field[16][12] = 0;
         field[15][11] = field[15][13] = 0;
         field[14][10] = field[14][12] = field[14][14] = 0;
@@ -379,13 +383,6 @@ public class Main {
      */
     public synchronized void sendExit(Player player) {
         players.remove(player);
-        if (players.isEmpty()) {
-            System.exit(0);
-        }
-    }
-
-    int[][] getField() {
-        return field;
     }
 
     public void setField(int[][] field) {

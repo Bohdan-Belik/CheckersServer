@@ -84,8 +84,6 @@ public class Game {
      */
     public void createField(String s) {
         fillField(s);
-        //updateField(s);
-        // Color 0xff0000ff
         String tail = s.substring(H * W + 2, H * W + 8);
         field[0][0] = Integer.parseInt(tail, 16);
         int col = field[0][0];
@@ -103,7 +101,7 @@ public class Game {
         for (int i = 0; i < H; i++) {
             for (int j = 0; j < W; j++) {
                 field[i][j] = s.charAt(k++) - '0';
-                if (isOccupied(field[i][j])) {
+                if (field[i][j] > 0 && field[i][j] < 9) {
                     pieces.add(new Piece(i, j, field[i][j]));
                 }
             }
@@ -116,8 +114,8 @@ public class Game {
      * @param cellValue value in cell
      * @return true if cell is occupied
      */
-    boolean isOccupied(int cellValue) {
-        return cellValue > 0 && cellValue < 7;
+    public boolean isOccupied(int cellValue) {
+        return cellValue > 0 && cellValue < IMPOSSIBLE;
     }
 
     /**
@@ -200,7 +198,7 @@ public class Game {
      * moving selected piece
      * @param p new position for selected piece
      */
-    public void movePiece(Pair p) {
+    void movePiece(Pair p) {
         int color = field[selectedPiece.getRow()][selectedPiece.getColumn()];
         field[selectedPiece.getRow()][selectedPiece.getColumn()] = 0;
         selectedPiece.setRow(p.getI());
@@ -228,25 +226,12 @@ public class Game {
     }
 
     /**
-     * Performs move and sends to server info about it
-     * @param p new position of selection
-     * @param connection object that perform communications
-     */
-    public void makeMove(Pair p, Connection connection) {
-        if (p !=null) {
-            String moveLine = createMoveLine(p);
-            if (!moveLine.isEmpty()) connection.send(moveLine);
-        }
-    }
-
-    /**
      * Create moveLine for new position of selection
      * @param p new position of selection
      * @return moveLine for send to server
      */
     public String createMoveLine(Pair p) {
         MoveType type = isMoveValid(p);
-        //System.out.println(valid);
         String moveLine;
         if (type == MoveType.SIMPLE) {
             Piece sp = getSelectedPiece();
@@ -268,10 +253,22 @@ public class Game {
     }
 
     /**
+     * Performs move and sends to server info about it
+     * @param p new position of selection
+     * @param connection object that perform communications
+     */
+    public void makeMove(Pair p, Connection connection) {
+        if (p != null) {
+            String moveLine = createMoveLine(p);
+            if (!moveLine.isEmpty()) connection.send(moveLine);
+        }
+    }
+
+    /**
      * Starts move
      * @param p position of selected cell
      */
-    public void startMove(Pair p) {
+   public void startMove(Pair p) {
         if (p != null) {
             Optional<Piece> f = findPiece(p);
             if (f.isEmpty()) {

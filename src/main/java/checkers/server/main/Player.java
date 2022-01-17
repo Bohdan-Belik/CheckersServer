@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import java.io.*;
 import java.net.Socket;
 
+import static checkers.GameConstants.FIELD;
+
 /**
  * Thread for communication with player
  */
@@ -27,8 +29,8 @@ public class Player implements Runnable {
         createInOut(socket);
     }
 
-    public Player() {
-    }
+    /** Default constructor - only for test purpose */
+    Player(){}
 
     /**
      * Creating in/out reader and writer for communication with client
@@ -102,7 +104,12 @@ public class Player implements Runnable {
      * as "tail" of field info, send color of player's pieces
      */
     public void sendField(int[][] field) {
-        StringBuilder buf = createFieldInfo(field);
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
+                buf.append(field[i][j]);
+            }
+        }
         buf.append(color);
         out.println(buf);
     }
@@ -112,7 +119,12 @@ public class Player implements Runnable {
      * @param field game field
      */
     public void updateField(int[][] field) {
-        StringBuilder buf = createFieldInfo(field);
+        StringBuilder buf = new StringBuilder(FIELD);
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
+                buf.append(field[i][j]);
+            }
+        }
         out.println(buf);
     }
 

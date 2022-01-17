@@ -1,7 +1,7 @@
 package checkers.client.main.controller;
 
-import checkers.client.main.model.Piece;
 import checkers.client.main.model.Game;
+import checkers.client.main.model.Piece;
 import checkers.client.main.model.moves.*;
 import checkers.client.main.util.GameParameters;
 import checkers.client.main.util.Pair;
@@ -19,13 +19,20 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Properties;
 
-import static checkers.GameConstants.*;
+import static checkers.GameConstants.IMPOSSIBLE;
+import static checkers.GameConstants.SORRY;
+
 
 public class Controller {
     public final static int SIZE = 40;
+    int W = 25;
+    int H = 17;
+    private Color myColor;
+    private State state;
 
     private Game game;
 
+    private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
     private Connection connection;
@@ -39,6 +46,8 @@ public class Controller {
     @FXML private Pane pane;
     @FXML private Label moveIndicator;
 
+    public Controller() {
+    }
 
     public static Controller getInstance() {
         return instance;
@@ -149,6 +158,7 @@ public class Controller {
         double y = e.getY();
         Pair p = findCell(x,y);
         game.processPair(p, connection);
+//        game.getPlayerState().processPair(p, game, connection);
         draw();
     }
 
@@ -158,7 +168,7 @@ public class Controller {
      * @param y Y coordinate of mouse click
      * @return pair with coordinates of cell or null if no cell in this position
      */
-    Pair findCell(double x, double y) {
+    private Pair findCell(double x, double y) {
         for (int i = 0; i < H; i++) {
             for (int j = 0; j < W; j++) {
                 if ((i+j)%2 == 0 && game.getField()[i][j] < IMPOSSIBLE) {

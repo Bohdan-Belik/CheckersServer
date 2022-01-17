@@ -8,9 +8,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * Main class for start Client Application
- */
 public class CheckersClientApp extends Application {
 
     public static void main(String[] args) {
